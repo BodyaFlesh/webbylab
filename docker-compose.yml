@@ -40,10 +40,10 @@ services:
 
     frontend:
         container_name: frontend
-        build: ./frontend
+        build: ./client
         restart: always
         volumes: 
-            - ./frontend/:/usr/app
+            - ./client/:/usr/app
         depends_on:
             - backend
         networks:
