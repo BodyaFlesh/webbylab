@@ -1,0 +1,28 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "start:dev": "cross-env NODE_ENV=development npm run migrate && cross-env NODE_ENV=development nodemon index",
+        "start": "cross-env NODE_ENV=production npm run migrate && cross-env NODE_ENV=production node index",
+        "test": "cross-env NODE_ENV=test jest --watch && cross-env NODE_ENV=test npm run clean-up",
+        "clean-up": "node test-cleanup",
+        "migrate": "sequelize-cli db:migrate"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "config": "^3.3.6",
+        "express": "^4.17.1",
+        "mysql2": "^2.2.5",
+        "sequelize": "^6.5.1",
+        "sequelize-cli": "^6.2.0"
+    },
+    "devDependencies": {
+        "cross-env": "^7.0.3",
+        "jest": "^26.6.3",
+        "nodemon": "^2.0.7"
+    }
+}
