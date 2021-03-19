@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../general/database');
+const Format = require('../formats/Format');
+const Actor = require('../actors/Actor');
 
 const Model = Sequelize.Model;
 
@@ -23,6 +25,9 @@ Movie.init(
         sequelize,
         modelName: 'movie'
     }
-)
+);
+
+Movie.belongsToMany(Format, { as: 'formats', through: movie_format, foreignKey: 'movieId', otherKey: 'formatId' });
+Movie.belongsToMany(Actor, { as: 'actors', through: movie_actor, foreignKey: 'movieId', otherKey: 'actorId' });
 
 module.exports = Movie;

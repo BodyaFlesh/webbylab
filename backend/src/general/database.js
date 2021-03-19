@@ -4,7 +4,8 @@ const config = require('config');
 const dbConfig = config.get('database');
 
 const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
-    dialect: dbConfig.dealect,
+    host: dbConfig.host,
+    dialect: dbConfig.dialect,
     storage: dbConfig.storage,
     logging: dbConfig.logging
 });

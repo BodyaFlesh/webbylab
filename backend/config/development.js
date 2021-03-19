@@ -2,7 +2,7 @@ module.exports = {
     database: {
         host: 'db',
         database: 'webbylab',
-        username: 'root',
+        username: 'db_user',
         password: 'jsdgw351;o94',
         dialect: 'mysql',
         storage: '',

@@ -2,19 +2,21 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        //const Movie = 
-        await queryInterface.createTable('movies', {
+        await queryInterface.createTable('movie_format', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            name: {
-                type: Sequelize.STRING
+            movieId: {
+                type: Sequelize.INTEGER,
+                references: { model: 'movies', key: 'id' },
+                onDelete: 'CASCADE'
             },
-            year: {
-                type: Sequelize.DATE
+            formatId: {
+                type: Sequelize.INTEGER,
+                references: { model: 'formats', key: 'id' }
             },
             createdAt: {
                 allowNull: false,
@@ -24,13 +26,10 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.DATE,
             }
-        });
-        // Movie.associate = models => {
-        //     Product.belongsToMany(models.formats, { as: 'formats', through: Movie_Format, foreignKey: 'movieId', otherKey: 'formatId' });
-        // }
+        })
     },
 
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('movies');
+        await queryInterface.dropTable('movie_format');
     }
 };
