@@ -27,7 +27,8 @@ const App = () => {
                             <Route path="/import" component={ImportMovie} />
                             <Route path="/movies" component={Movies} exact />
                             <Route path="/movies/create" component={EditMovie} />
-                            <Route path="/movies/:id" component={MoviePage} />
+                            <Route path="/movies/:id" exact component={MoviePage} />
+                            <Route path="/movies/:id/edit" component={EditMovie} />
                             <Route path="*" component={Page404} />
                         </Switch>
                     </div>
