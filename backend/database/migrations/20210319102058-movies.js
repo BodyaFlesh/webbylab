@@ -25,6 +25,8 @@ module.exports = {
                 type: Sequelize.DATE,
             }
         });
+
+        await queryInterface.addIndex('movies', ['name']);
         // Movie.associate = models => {
         //     Product.belongsToMany(models.formats, { as: 'formats', through: Movie_Format, foreignKey: 'movieId', otherKey: 'formatId' });
         // }
