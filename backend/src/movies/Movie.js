@@ -10,24 +10,25 @@ class Movie extends Model{}
 Movie.init(
     {
         id: {
+            primaryKey: true,
+            autoIncrement: true,
             type: Sequelize.INTEGER
-        },
+        }, 
         name: {
             type: Sequelize.STRING
         },
         year: {
             type: Sequelize.DATE
         }
-        //format
-        //list actors
     },
     {
         sequelize,
+        tableName: 'movies',
         modelName: 'movie'
     }
 );
 
-Movie.belongsToMany(Format, { as: 'formats', through: movie_format, foreignKey: 'movieId', otherKey: 'formatId' });
-Movie.belongsToMany(Actor, { as: 'actors', through: movie_actor, foreignKey: 'movieId', otherKey: 'actorId' });
+Movie.belongsToMany(Format, { as: 'formats', through: 'movie_format', foreignKey: 'movieId', otherKey: 'formatId' });
+Movie.belongsToMany(Actor, { as: 'actors', through: 'movie_actor', foreignKey: 'movieId', otherKey: 'actorId' });
 
 module.exports = Movie;

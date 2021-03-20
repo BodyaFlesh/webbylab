@@ -8,6 +8,8 @@ class Actor extends Model{}
 Actor.init(
     {
         id: {
+            primaryKey: true,
+            autoIncrement: true,
             type: Sequelize.INTEGER
         },
         first_name: {

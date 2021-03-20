@@ -6,7 +6,7 @@ const Menu = () => {
         <div className="left side-menu">
             <div className="topbar-left">
                 <div className="">
-                    <Link to="/" className="logo text-center">Фільмо 3000</Link>
+                    <Link to="/" className="logo text-center">Movie 3000</Link>
                 </div>
             </div>
 

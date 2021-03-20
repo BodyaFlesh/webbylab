@@ -8,6 +8,8 @@ class Format extends Model{}
 Format.init(
     {
         id: {
+            primaryKey: true,
+            autoIncrement: true,
             type: Sequelize.INTEGER
         },
         name: {

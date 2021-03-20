@@ -5,7 +5,7 @@ module.exports = {
         username: 'db_user',
         password: 'jsdgw351;o94',
         dialect: 'mysql',
-        storage: '',
-        logging: true
+        storage: false,
+        logging: false
     }
   };

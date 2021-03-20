@@ -4,7 +4,7 @@ const faker = require('faker');
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         const movies = [];
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 50; i++) {
             movies.push({
                 name: faker.random.word(),
                 year: faker.date.between('1970-01-01','2021-01-01'),
@@ -17,6 +17,6 @@ module.exports = {
     },
 
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.bulkdDelete('movies', null, {});
+        await queryInterface.bulkdDelete('movies', {}, {});
     }
 };
