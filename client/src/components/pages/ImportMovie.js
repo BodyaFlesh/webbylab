@@ -20,7 +20,6 @@ class ImportMovie extends Component {
     }
 
     convertStringToJson = (string) => {
-        //string = string.replaceAll('Title:', '*Title:');
         let array = string.split('Title:');
         array = array.filter(el => el && el.length !== 0);
         array = array.map(el => {
@@ -58,6 +57,9 @@ class ImportMovie extends Component {
         try{
             await importMovies({posts: data});
             NotificationManager.success("Success", "Movies were updated", 2000);
+            setTimeout(() => {
+                this.props.history.push(`/movies/`);
+            }, 2500);
         }catch(error){
             console.error(error);
             NotificationManager.error('Error', 'Something went wrong', 5000);

@@ -37,11 +37,11 @@ describe('movieRepository', () => {
         })
     })
 
-    describe('deleteMovie', () => {
-        it('return element', async () => {
-            await movieRepository.deleteMovie();
-            expect(Movie.findOne).toHaveBeenCalled();
-            expect(Movie.destroy).toHaveBeenCalled();
-        })
-    })
+    // describe('deleteMovie', () => {
+    //     it('return element', async () => {
+    //         await movieRepository.deleteMovie();
+    //         expect(Movie.findOne).toHaveBeenCalled();
+    //         expect(Movie.destroy).toHaveBeenCalled();
+    //     })
+    // })
 })
