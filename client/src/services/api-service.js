@@ -40,4 +40,14 @@ export default class ApiService{
     movieQueryGet = async (params) => {
         return this.request({ url: `/api/movies`, method: 'GET', params });
     }
+
+    //actors
+    getActors = async () => {
+        return this.request({ url: '/api/actors', method: 'GET' });
+    }
+
+    //formats
+    getFormats = async () => {
+        return this.request({ url: '/api/formats', method: "GET" });
+    }
 }

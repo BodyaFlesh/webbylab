@@ -15,19 +15,19 @@ const Menu = () => {
                     <ul>
                         <li>
                             <Link to="/import">
-                                <i class="dripicons-device-desktop"></i>
+                                <i className="dripicons-device-desktop"></i>
                                 <span> Import Movies </span>
                             </Link>
                         </li>
                         <li>
                             <Link to="/movies">
-                                <i class="dripicons-device-desktop"></i>
+                                <i className="dripicons-device-desktop"></i>
                                 <span> Movies </span>
                             </Link>
                         </li>
                         <li>
                             <Link to="/movies/create">
-                                <i class="dripicons-device-desktop"></i>
+                                <i className="dripicons-device-desktop"></i>
                                 <span> Create Movie </span>
                             </Link>
                         </li>

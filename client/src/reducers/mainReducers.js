@@ -1,7 +1,9 @@
-import { CHANGE_TITLE } from '../actions-type';
+import { CHANGE_TITLE, FETCH_ACTORS_SUCCESS, FETCH_FORMATS_SUCCESS } from '../actions-type';
 
 const initialState = {
-    title: ''
+    title: '',
+    actors: [],
+    formats: []
 }
 
 const reducer = (state = initialState, action) => {
@@ -12,6 +14,16 @@ const reducer = (state = initialState, action) => {
             return{
                 ...state,
                 title: payload
+            }
+        case FETCH_ACTORS_SUCCESS:
+            return{
+                ...state,
+                actors: payload
+            }
+        case FETCH_FORMATS_SUCCESS:
+            return{
+                ...state,
+                formats: payload
             }
         default:
             return state;

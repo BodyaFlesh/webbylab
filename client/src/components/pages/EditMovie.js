@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { Multiselect } from 'multiselect-react-dropdown';
 import { NotificationManager } from 'react-notifications';
 
 //redux
 import { connect } from 'react-redux';
-import { changeMainTitle } from '../../actions/mainActions';
+import { changeMainTitle, formatsLoaded, actorsLoaded } from '../../actions/mainActions';
 
 //hoc 
 import { withApiService } from '../hoc';
@@ -11,7 +12,7 @@ import { withApiService } from '../hoc';
 import { ErrorBoundary } from '../elements/error';
 
 //elements
-import { Input, Actions, Wrapper } from '../elements/form';
+import { Input, Actions, Wrapper, ListActors } from '../elements/form';
 
 
 
@@ -19,6 +20,11 @@ class CreateMovie extends Component{
 
     state = {
         loading: true,
+        listsOfData: {
+            customActors: [],
+            selectedActors: [],
+            selectedFormats: [],
+        },
         post: {
             id: null,
             name : '', 
@@ -60,18 +66,21 @@ class CreateMovie extends Component{
     }
 
     onCreate = async () => {
-        const { post } = this.state;
-        const { categoryCreate } = this.props.apiService;
+        const { post, listsOfData: { customActors, selectedActors, selectedFormats } } = this.state;
+        const { movieCreate } = this.props.apiService;
 
         try{
-            const { data: { id } } = await categoryCreate({
-                ...post
+            const { data: { id } } = await movieCreate({
+                ...post,
+                actorsIds: selectedActors.map(el => el.id),
+                formatsIds: selectedFormats.map(el => el.id),
+                actors: customActors
             });
             NotificationManager.success("Success", "Movie was created", 2000);
             
-            setTimeout(() => {
-                this.props.history.push(`/movies/${id}/edit`);
-            }, 2500);
+            // setTimeout(() => {
+            //     this.props.history.push(`/movies/${id}`);
+            // }, 2500);
         }catch(error){
             console.error(error);
             NotificationManager.error('Error', 'Something went wrong', 5000);
@@ -80,44 +89,94 @@ class CreateMovie extends Component{
     }
 
     onChange = ({ keyProp, value }) => {
-        
         const { post } = this.state;
         let clonePost = { ...post };
-        clonePost.translation[keyProp] = value;
+        clonePost[keyProp] = value;
         this.setState({
             post: clonePost
         })
     }
 
-    async componentDidMount(){
-        const { movieGet } = this.props.apiService;
-        const { changeMainTitle } = this.props;
-        const { id } = this.props.match.params; 
+    changeActorsList = (actors) => {
+        const { listsOfData } = this.state;
+        let cloneListOfData = { ...listsOfData };
+        cloneListOfData.customActors = actors;
+        this.setState({
+            listsOfData: cloneListOfData
+        })
+    }
 
-        if(id){
+    onChangeList(list, custom){
+        const { listsOfData } = this.state;
+        let cloneListOfData = { ...listsOfData };
+        cloneListOfData[custom] = list;
+        this.setState({
+            listsOfData: cloneListOfData
+        })
+    }
+
+    async componentDidMount(){
+        const { movieGet, getActors, getFormats } = this.props.apiService;
+        const { changeMainTitle, actorsLoaded, formatsLoaded , actors, formats } = this.props;
+        const { id } = this.props.match.params;
+        
+        if(actors.length === 0){
             try{
-                const { data } = await movieGet(id);
-                this.setState({
-                    post: data
-                })
+                const { data: { actors } } = await getActors();
+                actorsLoaded(actors);
             }catch(error){
                 console.error(error);
             }
+        }
+        
+
+        if(formats.length === 0){
+            try{
+                const { data: { formats } } = await getFormats();
+                formatsLoaded(formats);
+            }catch(error){
+                console.error(error);
+            }
+        }
+
+        if(id){
+            try{
+                const { listsOfData } = this.state;
+                const { data: { post } } = await movieGet(id);
+                let cloneListsOfData = { ...listsOfData };
+                cloneListsOfData.selectedActors = post.actors.map(el => {
+                    return {
+                        ...el,
+                        name: `${el.first_name} ${el.last_name}`
+                    }
+                });
+                cloneListsOfData.selectedFormats = post.formats; 
+                this.setState({
+                    post,
+                    listsOfData: cloneListsOfData
+                });
+                changeMainTitle(post.name);
+            }catch(error){
+                this.props.history.push('/not-found');
+                console.error(error);
+            }
         }else{
-            changeMainTitle('Create new category');
+            changeMainTitle('Create new movie');
         }
     }
 
     render(){
         let dates = null;
-        const { id, name, year, created_at, updated_at } = this.state.post;
+        const { actors, formats } = this.props;
+        const { selectedActors, selectedFormats, customActors } = this.state.listsOfData;
+        const { id, name, year, createdAt, updatedAt } = this.state.post;
 
         //dates
         if(id){
             dates = (
                 <>
-                    <Input text="Date of creation" keyProp="created_at" value={created_at} disabled />
-                    <Input text="Date of last update" keyProp="updated_at" value={updated_at} disabled />
+                    <Input text="Date of creation" keyProp="created_at" value={createdAt} disabled />
+                    <Input text="Date of last update" keyProp="updated_at" value={updatedAt} disabled />
                 </>
             )
         }
@@ -130,12 +189,27 @@ class CreateMovie extends Component{
                             <>
                             { id ? <Input text="ID" keyProp="id" value={id} onChange={this.onChange} disabled /> : '' }
                             <Input text="Name" keyProp="name" value={name} onChange={this.onChange} />
-                            <Input text="Year" keyProp="description" type="number" value={year} onChange={this.onChange} />
+                            <Input text="Year" keyProp="year" type={id ? 'text' : 'number'} value={year} onChange={this.onChange} disabled={id ? true : false} />
+                            <Wrapper text="Actors">
+                                <Multiselect
+                                    options={actors}
+                                    selectedValues={selectedActors}
+                                    displayValue="name"
+                                    onSelect={(list) => this.onChangeList(list, 'selectedActors')}
+                                    onRemove={(list) => this.onChangeList(list, 'selectedActors')}
+                                />
+                            </Wrapper>
                             <Wrapper text="Formats">
-                                test
+                                <Multiselect
+                                    options={formats}
+                                    selectedValues={selectedFormats}
+                                    displayValue="name"
+                                    onSelect={(list) => this.onChangeList(list, 'selectedFormats')}
+                                    onRemove={(list) => this.onChangeList(list, 'selectedFormats')}
+                                />
                             </Wrapper>
                             <Wrapper text="Actors">
-                                Actors
+                                <ListActors list={customActors} setList={this.changeActorsList} />
                             </Wrapper>
                             { dates }
                             <Actions onDelete={this.onDelete} onCreate={this.onCreate} onUpdate={this.onUpdate} id={id} />
@@ -146,13 +220,22 @@ class CreateMovie extends Component{
             </ErrorBoundary>
         )
     }
-
+ 
 }
 
 const mapDispatchToProps = {
-    changeMainTitle
+    changeMainTitle,
+    formatsLoaded, 
+    actorsLoaded
 }
 
-export default connect(null, mapDispatchToProps)(
+const mapStateToProps = ({main: {actors, formats}}) => {
+    return{
+        actors,
+        formats
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
     withApiService()(CreateMovie)
 );

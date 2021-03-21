@@ -32,22 +32,26 @@ class MoviePage extends Component{
 
         if(id){
             try{
-                const { data } = await movieGet(id);
+                const { data: { post } } = await movieGet(id);
+                console.log(post);
                 this.setState({
-                    post: data
-                })
-                changeMainTitle(data.name);
+                    post,
+                    loading: false
+                });
+                changeMainTitle(post.name);
             }catch(error){
                 console.error(error);
             }
         }else{
-            changeMainTitle('Create new category');
+            changeMainTitle('Not found');
         }
     }
 
     render(){
-        let dates = null;
-        const { id, name, year, created_at, updated_at } = this.state.post;
+        const { id, name, year, formats, actors } = this.state.post;
+
+        const formatsArr = formats.map(el => el.name);
+        const actorsArr = actors.map(({first_name, last_name}) => `${first_name} ${last_name}`);
 
         return(
             <ErrorBoundary>
@@ -56,27 +60,27 @@ class MoviePage extends Component{
                         <ul className="list-group list-group-flush m-b-30">
                             <li className="list-group-item">
                                 <span>Movie ID:</span> 
-                                <b>#1</b>
+                                <b>#{id}</b>
                             </li>
                             <li className="list-group-item">
                                 <span>Movie Name:</span> 
-                                <b>Movie</b>
+                                <b>{name}</b>
                             </li>
                             <li className="list-group-item">
                                 <span>Year:</span> 
-                                <b>1999</b>
+                                <b>{year}</b>
                             </li>
                             <li className="list-group-item">
                                 <span>Formats:</span> 
-                                <b>format</b>
+                                <b>{formatsArr.join(', ') || 'Information not found'}</b>
                             </li>
                             <li className="list-group-item">
                                 <span>Actors:</span> 
-                                <b>actor, actor, actor</b>
+                                <b>{actorsArr.join(', ') || 'Information not found'}</b>
                             </li>
                         </ul>
                         <div className="btn-group btn-group-toggle">
-                            <Link to="/movies/1/edit" className="btn btn-success">Edit movie</Link>
+                            <Link to={`/movies/${id}/edit`} className="btn btn-success">Edit movie</Link>
                             {/* <button type="button" className="btn btn-success">Edit movie</button>
                             <button type="button" className="btn btn-danger">Delete movie</button> */}
                         </div>

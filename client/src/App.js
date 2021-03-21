@@ -19,21 +19,21 @@ const App = () => {
         <div id="wrapper">
             <Menu />
             <div className="content-page">
-                <div class="content">
+                <div className="content">
                     <Topbar />
-                    <div class="page-content-wrapper">
+                    <div className="page-content-wrapper">
                         <Switch>
                             <Route path="/" component={Main} exact />
                             <Route path="/import" component={ImportMovie} />
                             <Route path="/movies" component={Movies} exact />
-                            <Route path="/movies/create" component={EditMovie} />
+                            <Route path="/movies/create" component={props => <EditMovie {...props} />} />
                             <Route path="/movies/:id" exact component={MoviePage} />
-                            <Route path="/movies/:id/edit" component={EditMovie} />
+                            <Route path="/movies/:id/edit" component={props => <EditMovie {...props} />} />
                             <Route path="*" component={Page404} />
                         </Switch>
                     </div>
                 </div>
-                <footer class="footer">
+                <footer className="footer">
                     For Webbylab
                 </footer>
             </div>

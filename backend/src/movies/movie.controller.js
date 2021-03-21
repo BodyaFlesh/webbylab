@@ -3,7 +3,6 @@ const movieService = require('./movie.service');
 //all
 const getMovies = async (req, res) => {
     try{
-        console.log(req);
         const { search, page } = req.query;
         const posts = await movieService.getMovies({ search, page });
         return res.json({'posts' : posts});
@@ -27,8 +26,8 @@ const getMovie = async (req, res) => {
 //create movie
 const createMovie = async (req, res) => {
     try{
-        await movieService.createMovie(req.body);
-        return res.json({'status' : 'success'}).status(201);
+        const post = await movieService.createMovie(req.body);
+        return res.json({'status' : 'success', post}).status(201);
     }catch(error){
         return res.json({'status' : 'Error', error}).status(400);
     }

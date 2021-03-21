@@ -3,32 +3,33 @@ const Format = require('../formats/Format');
 const Movie = require('./Movie');
 
 const getMovies = async ({ page = 1, search = '' }) => {
-    const limit = 10 * page;
-    const offset = (page - 1) * 10
+    const limit = 8 * page;
+    const offset = (page - 1) * 8
 
     return await Movie.findAll({
         limit,
         offset,
         order: [
             ['name', 'ASC']
-        ],
-        include: [
-            {
-                model: Format,
-                as: 'formats',
-                through: {
-                    attributes: []
-                }
-            },
-            {
-                model: Actor,
-                as: 'actors',
-                through: {
-                    attributes: []
-                }
-            }
         ]
     });
+
+    // include: [
+    //     {
+    //         model: Format,
+    //         as: 'formats',
+    //         through: {
+    //             attributes: []
+    //         }
+    //     },
+    //     {
+    //         model: Actor,
+    //         as: 'actors',
+    //         through: {
+    //             attributes: []
+    //         }
+    //     }
+    // ]
 }
 
 const getMovie = async (id) => {
