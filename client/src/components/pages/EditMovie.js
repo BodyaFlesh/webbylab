@@ -69,13 +69,19 @@ class CreateMovie extends Component{
         const { post, listsOfData: { customActors, selectedActors, selectedFormats } } = this.state;
         const { movieCreate } = this.props.apiService;
 
+        if(!post.name || !post.year){
+            NotificationManager.error('Error', 'Name and year of the movie is required', 5000);
+            return false;
+        }
+
         try{
-            const { data: { id } } = await movieCreate({
+            const { data } = await movieCreate({
                 ...post,
                 actorsIds: selectedActors.map(el => el.id),
                 formatsIds: selectedFormats.map(el => el.id),
                 actors: customActors
             });
+            const { post: { id } } = data;
             NotificationManager.success("Success", "Movie was created", 2000);
             
             setTimeout(() => {
