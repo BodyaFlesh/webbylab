@@ -41,6 +41,10 @@ export default class ApiService{
         return this.request({ url: `/api/movies`, method: 'GET', params });
     }
 
+    importMovies = async (data) => {
+        return this.request({ url: '/api/movies/import', method: "POST", data });
+    }
+
     //actors
     getActors = async () => {
         return this.request({ url: '/api/actors', method: 'GET' });

@@ -4,6 +4,11 @@ const findAll = async () => {
     return await Format.findAll();
 }
 
+const findOneByName = async (name) => {
+    return await Format.findOne({where: { name }});
+}
+
 module.exports = {
-    findAll
+    findAll,
+    findOneByName
 }

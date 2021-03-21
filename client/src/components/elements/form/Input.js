@@ -17,13 +17,9 @@ class Input extends Component{
 
     
     render(){
-        const { text, keyProp, type = 'text', disabled, value } = this.props;
+        const { text, keyProp, type = 'text', disabled, value, placeholder = '' } = this.props;
 
-        const Input = (
-            type === 'textarea' 
-            ? <textarea className="form-control" disabled={disabled} value={value || ''} name={keyProp} onChange={this.change}></textarea>
-            : <input className="form-control" disabled={disabled} value={value || ''} name={keyProp} type={type} onChange={this.change} />
-        );
+        const Input = (<input className="form-control" placeholder={placeholder} disabled={disabled} value={value || ''} name={keyProp} type={type} onChange={this.change} />);
 
         return(
             <div className="form-group row">

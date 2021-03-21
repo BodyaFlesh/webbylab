@@ -8,30 +8,52 @@ import { changeMainTitle } from '../../actions/mainActions';
 import { withApiService } from '../hoc';
 
 //elements
+import Pagination from '../elements/another/pagination';
 import { ErrorBoundary } from '../elements/error';
 import Item from '../elements/movies/Item';
 import Spinner from '../elements/spinner'
+import { Input } from '../elements/form';
 
 class Movies extends Component {
 
     state = {
         loading: true,
-        page: 1,
+        currentPage: 1,
+        count: 0,
+        perPage: 8,
         search: '',
         posts: []
+    }
+
+    changePage = async (page) => {
+        const { movieQueryGet } = this.props.apiService;
+        const { search } = this.state;
+        const { data: { posts, count } } = await movieQueryGet({page, search});
+        this.setState({
+            posts,
+            count,  
+            currentPage : page
+        })
+    }
+
+    onChange = ({ value }) => {
+        this.setState({
+            search: value
+        })
     }
 
     async componentDidMount(){
         const { movieQueryGet } = this.props.apiService;
         const { changeMainTitle } = this.props;
-        const { page, search } = this.state;
+        const { currentPage, search } = this.state;
 
         changeMainTitle('List of movies');
 
         try{
-            const { data: { posts } } = await movieQueryGet({page, search});
+            const { data: { posts, count } } = await movieQueryGet({page: currentPage, search});
             this.setState({
                 posts,
+                count,
                 loading: false
             })
         }catch(error){
@@ -41,7 +63,7 @@ class Movies extends Component {
 
     render(){
 
-        const { loading, posts } = this.state;
+        const { loading, posts, count, currentPage, perPage, search } = this.state;
 
         if(loading){
             return <Spinner />
@@ -50,6 +72,14 @@ class Movies extends Component {
         return(
             <ErrorBoundary>
                 <div className="container-fluid">
+                    <div className="row m-b-20">
+                        <div className="col-sm-9">
+                            <Input text="Search" placeholder="Search by name movie or first name actor in the movie" keyProp="search" value={search} onChange={this.onChange} />
+                        </div>
+                        <div className="col-sm-3">
+                            <button type="button" onClick={() => this.changePage(1)} className="btn btn-primary btn-block">Search</button>
+                        </div>
+                    </div>
                     <div className="row">
                         {
                             posts.map(el => (
@@ -57,6 +87,7 @@ class Movies extends Component {
                             ))
                         }
                     </div>
+                    <Pagination perPage={perPage} count={count} currentPage={currentPage} changePage={this.changePage} />
                 </div>
             </ErrorBoundary>
         )

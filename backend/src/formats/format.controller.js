@@ -5,7 +5,6 @@ const getFormats = async (req, res) => {
         const formats = await formatService.getFormats();
         return res.json({formats});
     }catch(error){
-        console.error(error);
         return res.json({'status' : 'Error', error}).status(400);
     }
 }

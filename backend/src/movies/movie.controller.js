@@ -4,10 +4,9 @@ const movieService = require('./movie.service');
 const getMovies = async (req, res) => {
     try{
         const { search, page } = req.query;
-        const posts = await movieService.getMovies({ search, page });
-        return res.json({'posts' : posts});
+        const { count, posts } = await movieService.getMovies({ search, page });
+        return res.json({posts, count});
     }catch(error){
-        console.error(error);
         return res.json({'status' : 'Error', error}).status(400);
     }
 };
@@ -49,11 +48,22 @@ const deleteMovie = async (req, res) => {
     }
 };
 
+//import movies
+const importMovies = async (req, res) => {
+    try{
+        const posts = await movieService.importMovies(req.body);
+        return res.status(201).json({posts});
+    }catch(error){
+        return res.json({'status' : 'Error', error}).status(400);
+    }
+}
+
 
 module.exports = {
     getMovies,
     getMovie,
     createMovie,
     deleteMovie,
-    updateMovie
+    updateMovie,
+    importMovies
 };

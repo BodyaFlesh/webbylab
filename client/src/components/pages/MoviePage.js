@@ -33,7 +33,6 @@ class MoviePage extends Component{
         if(id){
             try{
                 const { data: { post } } = await movieGet(id);
-                console.log(post);
                 this.setState({
                     post,
                     loading: false

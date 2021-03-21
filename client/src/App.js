@@ -1,5 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { NotificationContainer } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 //pages
 import Main from './components/pages/Main';
@@ -17,6 +19,7 @@ import Topbar from './components/elements/general/Topbar';
 const App = () => {
     return (
         <div id="wrapper">
+            <NotificationContainer />
             <Menu />
             <div className="content-page">
                 <div className="content">

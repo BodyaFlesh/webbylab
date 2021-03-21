@@ -1,5 +1,6 @@
 const movieRepository = require('./movie.repository');
-const actorRepository = require('../actors/actor.repository');
+const { findOrCreateListOfActors } = require('../actors/actor.repository');
+const { findOneByName } = require('../formats/format.repository');
 
 const getMovies = async(query) => {
     return await movieRepository.getMovies(query);
@@ -10,24 +11,31 @@ const getMovie = async (id) => {
 }
 
 const createMovie = async (data) => {
-    const { name, year, actorsIds, formatsIds, actors } = data;
-    const newActors = [];
-
-    //check all actor and create new in DB or get
-    if(actors && actors.length > 0 && Array.isArray(actors)){
-        actors.forEach(async (el) => {
-            let [first_name, last_name] = el.split(' ');
-            if(first_name, last_name){
-                const [ actor ] = await actorRepository.findOrCreate({ first_name, last_name });
-                newActors.push(actor.id);
-            }
-        });
-    }
+    const { name, year, actorsIds, formatsIds, actors = [] } = data;
+    
+    const newActors = await findOrCreateListOfActors(actors); 
 
     const movie = await movieRepository.createMovie({ name, year, actorsIds, formatsIds, newActors });
 
     return movie;
+}
 
+const importMovies = async ({ posts }) => {
+
+    let result = [];
+    posts.forEach(async (el) => {
+        let { name, year, formatsIds = [], actors = [], format } = el;
+        let formatRecord = await findOneByName(format);
+        //check format in DB
+        if(formatRecord){
+            formatsIds.push(formatRecord.id);
+        }
+        let newActors = await findOrCreateListOfActors(actors); 
+        let movie = await movieRepository.createMovie({ name, year, formatsIds, newActors });
+        result.push(movie);
+    })
+
+    return result;
 }
 
 //TODO dev
@@ -44,5 +52,6 @@ module.exports = {
     getMovies,
     createMovie,
     updateMovie,
-    deleteMovie
+    deleteMovie,
+    importMovies
 }

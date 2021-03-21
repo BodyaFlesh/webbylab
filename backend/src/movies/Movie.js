@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../general/database');
 const Format = require('../formats/Format');
 const Actor = require('../actors/Actor');
+const { Op } = Sequelize;
 
 const Model = Sequelize.Model;
 
@@ -24,7 +25,33 @@ Movie.init(
     {
         sequelize,
         tableName: 'movies',
-        modelName: 'movie'
+        modelName: 'movie',
+        scopes: {
+            actors: function(string) {
+                return {
+                    where: {
+                        [Op.or]: [
+                            {
+                                name: {
+                                    [Op.like] : `%${string}%`
+                                },
+                            },
+                            {
+                                id: {
+                                    [Op.in] : sequelize.literal(`(
+                                        SELECT movieId
+                                        FROM movie_actor 
+                                        WHERE actorId IN (
+                                            SELECT id FROM actors 
+                                            WHERE first_name LIKE '%${string}%'
+                                    ))`)
+                                }
+                            }
+                        ]
+                    }
+                };
+            }
+        }
     }
 );
 

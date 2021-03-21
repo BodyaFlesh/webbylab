@@ -8,7 +8,8 @@
         "start": "cross-env NODE_ENV=production npm run migrate && cross-env NODE_ENV=production node index",
         "test": "cross-env NODE_ENV=test jest --watch && cross-env NODE_ENV=test npm run clean-up",
         "clean-up": "node test-cleanup",
-        "migrate": "sequelize-cli db:migrate"
+        "migrate": "sequelize-cli db:migrate",
+        "seeder" : "sequelize-cli db:seed:all"
     },
     "keywords": [],
     "author": "",

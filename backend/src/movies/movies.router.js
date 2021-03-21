@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getMovie, getMovies, updateMovie, createMovie, deleteMovie } = require('./movie.controller');
+const { getMovie, getMovies, updateMovie, createMovie, deleteMovie, importMovies } = require('./movie.controller');
 
 //all
 router.get('/', getMovies);
@@ -10,6 +10,9 @@ router.get('/:id', getMovie);
 
 //create movie
 router.post('/', createMovie);
+
+//import movies
+router.post('/import', importMovies);
 
 //TODO update method
 router.put('/:id', updateMovie);

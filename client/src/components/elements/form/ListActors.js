@@ -5,7 +5,7 @@ class ListActors extends Component{
     // handle input change
     handleInputChange = (e, index) => {
         const { list, setList } = this.props;
-        const { name, value } = e.target;
+        const { value } = e.target;
         const listClone = [...list];
         listClone[index] = value;
         setList(listClone);

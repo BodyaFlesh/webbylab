@@ -17,6 +17,24 @@ const findOrCreate = async ({ first_name, last_name }) => {
     });
 } 
 
+const findOrCreateListOfActors = async (actors) => {
+    const newActors = [];
+
+    //check all actor and create new in DB or get
+    if(actors && actors.length > 0 && Array.isArray(actors)){
+        actors.forEach(async (el) => {
+            let [first_name, ...last_name] = el.trim().split(' ');
+            if(first_name, last_name){
+                last_name = last_name.join(' ');
+                const [ actor ] = await findOrCreate({ first_name, last_name });
+                newActors.push(actor.id);
+            }
+        });
+    }
+
+    return newActors;
+}
+
 const findAll = async () => {
     const actors = await Actor.findAll();
     return actors.map(el => {
@@ -30,5 +48,6 @@ const findAll = async () => {
 module.exports = {
     createActor,
     findOrCreate,
-    findAll
+    findAll,
+    findOrCreateListOfActors
 }

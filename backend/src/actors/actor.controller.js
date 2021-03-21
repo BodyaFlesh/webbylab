@@ -5,7 +5,6 @@ const getActors = async (req, res) => {
         const actors = await actorService.getActors();
         return res.json({actors});
     }catch(error){
-        console.error(error);
         return res.json({'status' : 'Error', error}).status(400);
     }
 }

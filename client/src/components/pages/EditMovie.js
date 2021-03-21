@@ -78,9 +78,9 @@ class CreateMovie extends Component{
             });
             NotificationManager.success("Success", "Movie was created", 2000);
             
-            // setTimeout(() => {
-            //     this.props.history.push(`/movies/${id}`);
-            // }, 2500);
+            setTimeout(() => {
+                this.props.history.push(`/movies/${id}`);
+            }, 2500);
         }catch(error){
             console.error(error);
             NotificationManager.error('Error', 'Something went wrong', 5000);
