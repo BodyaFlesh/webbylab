@@ -7,7 +7,7 @@ const findAll = async () => {
 const findOneByName = async (name) => {
     return await Format.findOne({where: { name }});
 }
-
+ 
 module.exports = {
     findAll,
     findOneByName

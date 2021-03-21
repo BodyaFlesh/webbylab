@@ -24,7 +24,7 @@ const findOrCreateListOfActors = async (actors) => {
     if(actors && actors.length > 0 && Array.isArray(actors)){
         actors.forEach(async (el) => {
             let [first_name, ...last_name] = el.trim().split(' ');
-            if(first_name, last_name){
+            if(first_name && last_name){
                 last_name = last_name.join(' ');
                 const [ actor ] = await findOrCreate({ first_name, last_name });
                 newActors.push(actor.id);
