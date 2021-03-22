@@ -26,6 +26,12 @@ const getMovies = async ({ page = 1, search = '' }) => {
     }
 }
 
+const findMovie = async ({name, year}) => {
+    return await Movie.findOne({ 
+        where: { name, year }
+    });
+}
+
 const getMovie = async (id) => {
     return await Movie.findOne({ 
         where: { id },
@@ -107,5 +113,6 @@ module.exports = {
     getMovie,
     createMovie,
     deleteMovie,
-    updateMovie
+    updateMovie,
+    findMovie
 }

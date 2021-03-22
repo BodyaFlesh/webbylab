@@ -33,17 +33,20 @@ const updateMovie = async (id, data) => {
 const importMovies = async ({ posts }) => {
 
     let result = [];
-    posts.forEach(async (el) => {
+    for(const el of posts){
         let { name, year, formatsIds = [], actors = [], format } = el;
-        let formatRecord = await findOneByName(format);
-        //check format in DB
-        if(formatRecord){
-            formatsIds.push(formatRecord.id);
+        let check = await movieRepository.findMovie({name, year});
+        if(!check){
+            let formatRecord = await findOneByName(format);
+            //check format in DB
+            if(formatRecord){
+                formatsIds.push(formatRecord.id);
+            }
+            let newActors = await findOrCreateListOfActors(actors); 
+            let movie = await movieRepository.createMovie({ name, year, formatsIds, newActors }); 
+            result.push(movie);
         }
-        let newActors = await findOrCreateListOfActors(actors); 
-        let movie = await movieRepository.createMovie({ name, year, formatsIds, newActors });
-        result.push(movie);
-    })
+    }
 
     return result;
 }

@@ -19,7 +19,37 @@ class ImportMovie extends Component {
         data: []
     }
 
+    checkFile = (string) => {
+        if(!string || string.length < 1){
+            NotificationManager.error('Error', 'The file is not valid or empty', 5000);
+            return true;
+        }
+        return false;
+    }
+
+    checkCorectFormatMovie = (array) => {
+        const reg = /[\u0401\u0451\u0410-\u044f]/;
+        const min = 1888, max = 2030;
+        const result = array.filter(({year, name}) => {
+            return name && year && !reg.test(name) && year > min && year < 2030;
+        });
+
+        if(result.length !== array.length){
+            NotificationManager.warning('info', `${array.length - result.length} of ${result.length} items have an incorrect name or year. And won't be download.`, 5000);
+        }
+
+        if(result.length === array.length){
+            NotificationManager.success('success', 'All data ready for upload', 5000);
+        }
+
+        return result;
+    }
+
     convertStringToJson = (string) => {
+        if(this.checkFile(string)){
+            return false;
+        }
+
         let array = string.split('Title:');
         array = array.filter(el => el && el.length !== 0);
         array = array.map(el => {
@@ -31,6 +61,7 @@ class ImportMovie extends Component {
                 actors: actors.split(', ')
             }
         });
+        array = this.checkCorectFormatMovie(array);
         this.setState({
             data: array
         })
@@ -55,8 +86,8 @@ class ImportMovie extends Component {
         const { data } = this.state;
 
         try{
-            await importMovies({posts: data});
-            NotificationManager.success("Success", "Movies were updated", 2000);
+            const { data: { posts } } = await importMovies({posts: data});
+            NotificationManager.success("Success", `${posts.length} movies were updated`, 2000);
             setTimeout(() => {
                 this.props.history.push(`/movies/`);
             }, 2500);
