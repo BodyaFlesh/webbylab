@@ -51,26 +51,47 @@ class CreateMovie extends Component{
     }
 
     onUpdate = async () => {
-        const { changeMainTitle } = this.props;
-        const { post } = this.state;
+        const { post, listsOfData: { customActors, selectedActors, selectedFormats } } = this.state;
         const { movieUpdate } = this.props.apiService;
-        changeMainTitle(post.name);
+
+        if(this.validate(post)){
+            return false;
+        }
 
         try{
-            await movieUpdate(post.id, { ...post });
+            const { data } = await movieUpdate(post.id, {
+                ...post,
+                actorsIds: selectedActors.map(el => el.id),
+                formatsIds: selectedFormats.map(el => el.id),
+                actors: customActors
+            });
+
+            const { post: { id } } = data;
             NotificationManager.success("Success", "Movie was updated", 2000);
+            
+            setTimeout(() => {
+                this.props.history.push(`/movies/${id}`);
+            }, 2500);
         }catch(error){
             console.error(error);
             NotificationManager.error('Error', 'Something went wrong', 5000);
         }
     }
 
+    resetCustomActors = () => {
+        const { listsOfData } = this.state;
+        let cloneListOfData = { ...listsOfData };
+        cloneListOfData.customActors = [];
+        this.setState({
+            listsOfData: cloneListOfData
+        })
+    }
+
     onCreate = async () => {
         const { post, listsOfData: { customActors, selectedActors, selectedFormats } } = this.state;
         const { movieCreate } = this.props.apiService;
 
-        if(!post.name || !post.year){
-            NotificationManager.error('Error', 'Name and year of the movie is required', 5000);
+        if(this.validate(post)){
             return false;
         }
 
@@ -91,7 +112,31 @@ class CreateMovie extends Component{
             console.error(error);
             NotificationManager.error('Error', 'Something went wrong', 5000);
         }
-        
+    }
+
+    validate = ({name, year}) => {
+        const reg = /[\u0401\u0451\u0410-\u044f]/;
+        if(!name || !year){
+            NotificationManager.error('Error', 'Name and year of the movie is required', 5000);
+            return true;
+        }
+
+        if(name.length < 2){
+            NotificationManager.error('Error', 'Name of the movie should have length more 1 characters', 5000);
+            return true;
+        }
+
+        if(reg.test(name)){
+            NotificationManager.error('Error', 'The name of the movie can consist of Latin characters and numbers', 5000);
+            return true;
+        }
+
+        if(year < 1888 || year > 2030){
+            NotificationManager.error('Error', 'Year should have a value between 1888 and 2030', 5000);
+            return true;
+        }
+
+        return false;
     }
 
     onChange = ({ keyProp, value }) => {
@@ -195,7 +240,7 @@ class CreateMovie extends Component{
                             <>
                             { id ? <Input text="ID" keyProp="id" value={id} onChange={this.onChange} disabled /> : '' }
                             <Input text="Name" keyProp="name" value={name} onChange={this.onChange} />
-                            <Input text="Year" keyProp="year" type={id ? 'text' : 'number'} value={year} onChange={this.onChange} disabled={id ? true : false} />
+                            <Input text="Year" keyProp="year" type='number' value={year} onChange={this.onChange} min="1888" max="2030" />
                             <Wrapper text="Actors">
                                 <Multiselect
                                     options={actors}

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NotificationManager } from 'react-notifications';
 
 //redux
 import { connect } from 'react-redux';
@@ -25,9 +26,23 @@ class Movies extends Component {
         posts: []
     }
 
+    validate = (field) => {
+        const reg = /[\u0401\u0451\u0410-\u044f]/;
+        if(reg.test(field)){
+            NotificationManager.error('Error', 'The search word can consist of Latin characters and numbers', 5000);
+            return true;
+        }
+        return false;
+    }
+
     changePage = async (page) => {
         const { movieQueryGet } = this.props.apiService;
         const { search } = this.state;
+
+        if(this.validate(search)){
+            return false;
+        }
+
         const { data: { posts, count } } = await movieQueryGet({page, search});
         this.setState({
             posts,

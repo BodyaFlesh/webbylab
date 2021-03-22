@@ -14,7 +14,7 @@ module.exports = {
                 type: Sequelize.STRING
             },
             year: {
-                type: Sequelize.DATE
+                type: Sequelize.INTEGER
             },
             createdAt: {
                 allowNull: false,
@@ -27,9 +27,6 @@ module.exports = {
         });
 
         await queryInterface.addIndex('movies', ['name']);
-        // Movie.associate = models => {
-        //     Product.belongsToMany(models.formats, { as: 'formats', through: Movie_Format, foreignKey: 'movieId', otherKey: 'formatId' });
-        // }
     },
 
     down: async (queryInterface, Sequelize) => {

@@ -4,7 +4,7 @@ const movieRepository = require('../../src/movies/movie.repository');
 const MovieModel = {
     id: 1,
     name: 'Movie',
-    year: '2020-01-01'
+    year: 2020
 };
 
 Movie.findOne = jest.fn().mockImplementation(() => MovieModel);

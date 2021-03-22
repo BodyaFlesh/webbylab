@@ -55,7 +55,7 @@ class ListActors extends Component{
                     );
                 })}
                 <div>
-                    <button className="btn btn-success" onClick={this.handleAddClick}>Add</button>
+                    <button className="btn btn-success" onClick={this.handleAddClick}>Add new actor</button>
                 </div>
             </>
         )

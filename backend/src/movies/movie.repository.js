@@ -50,10 +50,9 @@ const getMovie = async (id) => {
 
 const createMovie = async (data) => {
     const { name, year, actorsIds, formatsIds, newActors } = data;
-    const dateValue = year ? new Date(`${year}-01-01`) : null;
     const movie = await Movie.create({
         name,
-        year: dateValue
+        year
     });
 
     if(actorsIds && actorsIds.length > 0 && Array.isArray(actorsIds)){
@@ -62,6 +61,31 @@ const createMovie = async (data) => {
 
     if(formatsIds && formatsIds.length > 0 && Array.isArray(formatsIds)){
         movie.addFormats([...formatsIds]);
+    }
+
+    if(newActors && newActors.length){
+        movie.addActors([...newActors]);
+    }
+
+    return movie;
+}
+
+const updateMovie = async (id, data) => {
+    const { name, year, actorsIds, formatsIds, newActors } = data;
+    const movie = await Movie.findOne({ 
+        where: { id }
+    });
+    await movie.update({
+        name,
+        year
+    });
+
+    if(actorsIds && actorsIds.length > 0 && Array.isArray(actorsIds)){
+        movie.setActors([...actorsIds]);
+    }
+
+    if(formatsIds && formatsIds.length > 0 && Array.isArray(formatsIds)){
+        movie.setFormats([...formatsIds]);
     }
 
     if(newActors && newActors.length){
@@ -82,5 +106,6 @@ module.exports = {
     getMovies,
     getMovie,
     createMovie,
-    deleteMovie
+    deleteMovie,
+    updateMovie
 }

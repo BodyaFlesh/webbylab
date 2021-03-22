@@ -29,7 +29,7 @@ export default class ApiService{
         return this.request({url: `/api/movies/${id}`, method: 'GET' });
     }
 
-    movieUpdate = async (id, data) => {
+    movieUpdate = async (id, data) => { 
         return this.request({ url: `/api/movies/${id}`, method: 'PUT', data });
     }
 

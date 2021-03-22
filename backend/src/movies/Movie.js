@@ -19,7 +19,7 @@ Movie.init(
             type: Sequelize.STRING
         },
         year: {
-            type: Sequelize.DATE
+            type: Sequelize.INTEGER
         }
     },
     {

@@ -20,6 +20,16 @@ const createMovie = async (data) => {
     return movie;
 }
 
+const updateMovie = async (id, data) => {
+    const { name, year, actorsIds, formatsIds, actors = [] } = data;
+    
+    const newActors = await findOrCreateListOfActors(actors); 
+
+    const movie = await movieRepository.updateMovie(id, { name, year, actorsIds, formatsIds, newActors });
+
+    return movie;
+}
+
 const importMovies = async ({ posts }) => {
 
     let result = [];
@@ -47,5 +57,6 @@ module.exports = {
     getMovies,
     createMovie,
     deleteMovie,
-    importMovies
+    importMovies,
+    updateMovie
 }
