@@ -32,11 +32,6 @@ const createMovie = async (req, res) => {
     }
 }
 
-//TODO update method
-const updateMovie = async (req, res) => {
-
-}
-
 //delete movie
 const deleteMovie = async (req, res) => {
     try{
@@ -64,6 +59,5 @@ module.exports = {
     getMovie,
     createMovie,
     deleteMovie,
-    updateMovie,
     importMovies
 };

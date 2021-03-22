@@ -71,10 +71,6 @@ const createMovie = async (data) => {
     return movie;
 }
 
-const updateMovie = async (data) => {
-
-}
-
 const deleteMovie = async (id) => {
     const movie = await Movie.findOne({ where: { id }});
     //TODO check exists
@@ -86,6 +82,5 @@ module.exports = {
     getMovies,
     getMovie,
     createMovie,
-    updateMovie,
     deleteMovie
 }

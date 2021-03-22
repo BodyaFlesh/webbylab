@@ -38,11 +38,6 @@ const importMovies = async ({ posts }) => {
     return result;
 }
 
-//TODO dev
-const updateMovie = async (data) => {
-
-}
-
 const deleteMovie = async (id) => {
     return await movieRepository.deleteMovie(id);
 }
@@ -51,7 +46,6 @@ module.exports = {
     getMovie,
     getMovies,
     createMovie,
-    updateMovie,
     deleteMovie,
     importMovies
 }
